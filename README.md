@@ -127,17 +127,26 @@ class AppConfig:
 
 ### 4. 路径配置
 
-[`path_config.py`](./path_config.py) 集中管理路径，避免硬编码：
+[`path_config.py`](./path_config.py) 集中管理共享路径逻辑，避免硬编码。
+
+> **本机专属路径**：由于两台电脑的 manim-env 安装位置不同，`MANIM_ENV_ROOT` 不写死在 `path_config.py` 中，而是放在 **`path_config.local.py`**（已 gitignore，不同步）。`path_config.py` 会优先读取该文件，不存在则使用默认值 `~/manim_projects/manim-env`。
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
 | `PROJECT_ROOT` | 本文件所在目录 | 项目根目录 |
 | `SCENES_DIR` | `./scenes` | 场景脚本目录（已 gitignore） |
-| `MANIM_ENV_ROOT` | `~/manim_projects/manim-env` | Manim 虚拟环境 |
+| `MANIM_ENV_ROOT` | `~/manim_projects/manim-env` | Manim 虚拟环境（可被 `path_config.local.py` 覆盖） |
 | `MANIM_BIN` | `.../bin/manim` | Manim 可执行文件 |
 | `PYTHON_BIN` | `.../bin/python` | 虚拟环境 Python |
 | `MEDIA_DIR` | `./media` | 渲染输出根目录 |
 | `VOICEOVER_CACHE_DIR` | `./media/voiceovers` | TTS 音频缓存 |
+
+**在新机器上配置**：
+
+```bash
+cp path_config.local.example.py path_config.local.py
+# 然后编辑 path_config.local.py，把 MANIM_ENV_ROOT 改成你本机的实际路径
+```
 
 ---
 
