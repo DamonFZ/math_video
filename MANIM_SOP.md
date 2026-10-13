@@ -14,9 +14,24 @@
 ## 3. 铁律：相对坐标绑定
 - 辅助线、高亮扫描框、移动动效等，坐标必须通过核心图形的 `.get_center()`、`.get_corner()` 或 `VGroup` 绑定。绝不能硬编码写死坐标，确保主图缩放移动时，附属物不发生错位。
 
-## 4. 铁律：边界防溢出机制 (Boundary Safety)
-- **动态宽容度检查**：Manim 画布的默认宽度大约为 14.2 个单位。任何排列在右侧（Right Zone）的文本组或长公式，必须进行右侧边界保护。
-- **强制缩放策略**：对于单行超过 10 个中文字符，或包含极长等式（如连加、长多项式）的元素，必须主动采取以下两种措施之一：
-  1. **大幅降级字号**：将其 `font_size` 设置为常规字号的 70% 甚至更小。
-  2. **宽度强制拦截**：在加入画面前，检查其宽度，或强制使用 `.scale_to_fit_width()`，限制其最大宽度不超过画布宽度的一半（约 6.0）。
-- **留白原则**：整个右侧的 VGroup 打包后，最后必须验证能否安全放置在画面内，必要时可整体向左平移 `shift(LEFT * 1.0)` 留出安全右边距。
+## 4. 铁律：基于边界检测的防溢出机制 (Responsive Boundary Safety)
+- **动态宽度校验**：在将任何大型 `VGroup`（如左侧的复杂几何图、右侧的长篇推导公式或总结文字）最终加入画面 (`play` 或 `add`) 之前，必须主动检查其物理宽度 `.width`。
+- **右侧公式区压缩拦截**：
+  ```python
+  if right_math_group.width > AppConfig.MAX_RIGHT_WIDTH:
+      right_math_group.scale_to_fit_width(AppConfig.MAX_RIGHT_WIDTH)
+  ```
+- **左侧图形区压缩拦截**：
+  ```python
+  if diagram_group.width > AppConfig.MAX_LEFT_WIDTH:
+      diagram_group.scale_to_fit_width(AppConfig.MAX_LEFT_WIDTH)
+  ```
+- **相对坐标的重置要求**：请注意，如果在应用 `.scale_to_fit_width()` 之后改变了元素的尺寸，必须重新调用 `.next_to()` 或 `.move_to()` 刷新其锚点，以防缩放导致中心点偏移！
+
+## 5. 铁律：自动化版本控制 (Git Workflow)
+- **触发时机**：每次你修改了非 `.gitignore` 排除的文件（例如新建了业务 `.py` 文件、重构了基类、或者修复了某个排版 Bug），**并且在终端成功执行渲染、确认视频出片无误后**，必须主动进行 Git 提交。
+- **标准执行动作**：
+  1. 执行 `git status` 检查变动。
+  2. 执行 `git add .` 添加所有合法文件的修改。
+  3. 执行 `git commit -m "<type>: <简明扼要描述本次修改或新增的题目>"` （type 请使用规范的 feat, fix, chore, docs 等）。
+- **底线原则**：严禁在代码运行报错、画面崩溃时进行 commit。确保历史记录中的每一次 commit 都是一个能跑通出片的“可用版本”。

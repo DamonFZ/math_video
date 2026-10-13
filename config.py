@@ -40,3 +40,11 @@ class AppConfig:
 
     # 4. 安全边距缩放极限：如果图形长宽超过 5.0，建议默认 scale(0.75)
     MAX_GRAPH_SIZE = 5.0
+
+    # === 响应式物理边界限制 (Bounding Box Limits) ===
+    # Manim 标准横屏画布总宽度约为 14.2
+    # 左侧图形区最大允许宽度 (防止挤压右侧)
+    MAX_LEFT_WIDTH = 6.5
+
+    # 右侧公式区最大允许宽度 (防止溢出屏幕右侧)
+    MAX_RIGHT_WIDTH = 6.0
