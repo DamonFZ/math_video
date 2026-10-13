@@ -17,8 +17,13 @@ class AppConfig:
     FAST_TEXT_RUNTIME = 0.5
     FAST_SHAPE_RUNTIME = 0.8
     DEFAULT_FONT = "sans-serif"
-    TITLE_FONT_SIZE = 36
-    NORMAL_FONT_SIZE = 26
+    # 抖音爆款大字号配置
+    TITLE_FONT_SIZE = 64     # 标题必须极大
+    NORMAL_FONT_SIZE = 52    # 普通正文和公式也要大
+
+    # 横向安全边界 (实测 -r 1080,1920 下 camera.frame_width≈14.22)
+    # SAFE_WIDTH 取帧宽的约 85%，保证大字报撑满横向且左右留边
+    SAFE_WIDTH = 12.0
 
     COLOR_TITLE = "#333333"
     COLOR_TEXT = "#333333"

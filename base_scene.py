@@ -105,24 +105,19 @@ class MathExplainScene(VoiceoverScene):
             )
         )
 
-        # 作业本方格背景
-        self.camera.background_color = "#FFFFFF"
-        grid = NumberPlane(
-            x_range=[-15, 15, 0.5],
-            y_range=[-10, 10, 0.5],
+        # 极暗深灰/黑底
+        self.camera.background_color = "#080808"
+
+        # 抖音爆款同款暗色网格背景
+        bg_grid = NumberPlane(
+            x_range=[-10, 10, 1],
+            y_range=[-20, 20, 1],
             background_line_style={
-                "stroke_color": "#E8E8E8",
+                "stroke_color": "#333333",  # 幽暗灰色网格线
                 "stroke_width": 2,
-                "stroke_opacity": 1,
+                "stroke_opacity": 0.5,
             },
             faded_line_ratio=0,
         )
-        grid.axes.set_opacity(0)
-
-        margin_line = Line(
-            start=UP * 10 + LEFT * 5.5,
-            end=DOWN * 10 + LEFT * 5.5,
-            color="#FF9999",
-            stroke_width=3,
-        )
-        self.add(grid, margin_line)
+        bg_grid.axes.set_opacity(0)  # 隐藏坐标轴主线
+        self.add(bg_grid)
