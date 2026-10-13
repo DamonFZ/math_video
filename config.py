@@ -20,12 +20,11 @@ class AppConfig:
     TITLE_FONT_SIZE = 36
     NORMAL_FONT_SIZE = 26
 
-    # 竖屏暗黑霓虹风配置
-    COLOR_TITLE = "#FFFFFF"       # 纯白
-    COLOR_TEXT = "#E0E0E0"        # 浅灰
-    COLOR_LINE_1 = "#00E5FF"      # 霓虹青 (代表 a 和 3)
-    COLOR_LINE_2 = "#FFEB3B"      # 霓虹黄 (代表 b 和 5)
-    COLOR_HIGHLIGHT = "#FF1744"   # 霓虹红 (代表重点/斜边)
+    COLOR_TITLE = "#333333"
+    COLOR_TEXT = "#333333"
+    COLOR_LINE_1 = BLUE_D
+    COLOR_LINE_2 = GREEN_D
+    COLOR_HIGHLIGHT = "#E65100"
 
     # === 全局空间排版锚点 (Zoning & Layout) ===
     # 遵循三分法则：顶部题干区、左下图形区、右下推导区
@@ -43,9 +42,9 @@ class AppConfig:
     MAX_GRAPH_SIZE = 5.0
 
     # === 响应式物理边界限制 (Bounding Box Limits) ===
-    # 竖屏物理边界极限 (由于是竖屏，横向变得极窄，务必注意！)
-    # 竖屏下最大允许总宽度约 7.0
-    MAX_LEFT_WIDTH = 6.0
+    # Manim 标准横屏画布总宽度约为 14.2
+    # 左侧图形区最大允许宽度 (防止挤压右侧)
+    MAX_LEFT_WIDTH = 6.5
 
     # 右侧公式区最大允许宽度 (防止溢出屏幕右侧)
     MAX_RIGHT_WIDTH = 6.0

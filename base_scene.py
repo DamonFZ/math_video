@@ -6,7 +6,6 @@ import hashlib
 
 import requests
 from manim import *
-from manim import config as manim_config
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.base import SpeechService
 
@@ -99,12 +98,6 @@ class MathExplainScene(VoiceoverScene):
     """所有数学讲解视频的基类。"""
 
     def setup(self):
-        # 强制竖屏配置 (1080x1920)
-        manim_config.pixel_width = 1080
-        manim_config.pixel_height = 1920
-        manim_config.frame_height = 14.22
-        manim_config.frame_width = 8.0
-
         super().setup()
         self.set_speech_service(
             VolcengineTTSService(
@@ -112,5 +105,24 @@ class MathExplainScene(VoiceoverScene):
             )
         )
 
-        # 设定纯黑背景
-        self.camera.background_color = "#000000"
+        # 作业本方格背景
+        self.camera.background_color = "#FFFFFF"
+        grid = NumberPlane(
+            x_range=[-15, 15, 0.5],
+            y_range=[-10, 10, 0.5],
+            background_line_style={
+                "stroke_color": "#E8E8E8",
+                "stroke_width": 2,
+                "stroke_opacity": 1,
+            },
+            faded_line_ratio=0,
+        )
+        grid.axes.set_opacity(0)
+
+        margin_line = Line(
+            start=UP * 10 + LEFT * 5.5,
+            end=DOWN * 10 + LEFT * 5.5,
+            color="#FF9999",
+            stroke_width=3,
+        )
+        self.add(grid, margin_line)
