@@ -1,179 +1,237 @@
 """
-《鸡兔同笼：假设法》竖屏暗黑风 · 抖音大字报版
+《鸡兔同笼：假设法》竖屏白底草稿本 · 抖音安全区版
 
-视觉目标：字体极大、核心图形撑满横向 ~85%，暗黑网格背景。
-
-重要坐标约定（实测 -r 1080,1920 下 camera.frame=14.222 x 25.284）：
-  - Y 范围 [-12.64, 12.64]
-  - 注意：to_edge() 内部使用 config.frame_height=8.0，会导致定位错乱，
-    因此本视频全部采用绝对 Y 坐标布局。
+视觉目标：白底浅灰网格草稿本风格，所有元素收缩在抖音 UI 安全区内。
+  - SAFE_WIDTH = 5.8  (防右侧点赞栏遮挡)
+  - SAFE_Y_BOTTOM = -5.0  (防底部文案栏遮挡)
+  - frame = 8.0 x 14.22，Y 范围 [-7.11, 7.11]
 """
 
 from manim import *
 from base_scene import MathExplainScene
 from config import AppConfig
 
-YELLOW = "#FFEB3B"
-CYAN = "#00E5FF"
-RED = "#FF1744"
-WHITE = "#FFFFFF"
-GRAY = "#E0E0E0"
-
-# 实际帧半高（camera.frame_height / 2）
-FRAME_HALF_H = 12.64
-
 
 class ChickenRabbit(MathExplainScene):
     def construct(self):
-        safe_w = AppConfig.SAFE_WIDTH  # 12.0 ≈ 帧宽的 85%
+        # ── 运行时帧高（由基类 setup 强制为 14.22）──
+        frame_h = self.camera.frame_height
+        half_h = frame_h / 2.0
+        safe_w = AppConfig.SAFE_WIDTH
+        safe_bottom = AppConfig.SAFE_Y_BOTTOM
 
-        # ============================================================
-        # 1. 顶部：大字报标题（两行分离 + 撑满横向）
-        # ============================================================
+        C_TITLE = AppConfig.COLOR_TITLE
+        C_TEXT = AppConfig.COLOR_TEXT
+        C_HL = AppConfig.COLOR_HIGHLIGHT
+        C_BLUE = AppConfig.COLOR_LINE_1
+        C_GREEN = AppConfig.COLOR_LINE_2
+
+        # ════════════════════════════════════════
+        # 1. 标题区（顶部）
+        # ════════════════════════════════════════
         title_main = Text(
             "鸡兔同笼 (假设法)",
             font=AppConfig.DEFAULT_FONT,
             font_size=AppConfig.TITLE_FONT_SIZE,
-            weight=BOLD,
-            color=YELLOW,
+            weight="BOLD",
+            color=C_HL,
         )
-        title_detail = Text(
-            "共 20 只，56 只脚。鸡兔各多少？",
+        title_sub = Text(
+            "有若干只鸡兔同在一个笼子里，共 20 个头，56 只脚。问鸡和兔各有几只？",
             font=AppConfig.DEFAULT_FONT,
             font_size=AppConfig.NORMAL_FONT_SIZE,
-            color=WHITE,
+            color=C_TEXT,
         )
-        title_group = VGroup(title_main, title_detail).arrange(DOWN, buff=0.4)
+        title_group = VGroup(title_main, title_sub).arrange(DOWN, buff=0.3)
         if title_group.width > safe_w:
             title_group.scale_to_fit_width(safe_w)
-        # 绝对坐标置顶（顶部留白 ~1.0）
-        title_top_y = FRAME_HALF_H - 1.0
+        title_top_y = half_h - 0.5
         title_group.shift(UP * (title_top_y - title_group.get_top()[1]))
 
-        with self.voiceover(text="经典的鸡兔同笼问题，教你用假设法一秒看破！"):
-            self.play(Write(title_group), run_time=AppConfig.FAST_TEXT_RUNTIME)
+        with self.voiceover("同学们，今天我们学习经典的鸡兔同笼问题。"):
+            self.play(Write(title_group), run_time=1.5)
+        self.wait(0.3)
 
-        # ============================================================
-        # 2. 中部：20 只动物网格（撑满横向 + 加粗线条）
-        # ============================================================
+        # ════════════════════════════════════════
+        # 2. 图形区（中部，撑满安全宽度）
+        # ════════════════════════════════════════
+        def make_chicken(scale=1.0):
+            body = Circle(radius=0.4 * scale, color=C_BLUE, stroke_width=6)
+            legs = VGroup(
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_BLUE,
+                    stroke_width=6,
+                ),
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_BLUE,
+                    stroke_width=6,
+                ),
+            )
+            legs[0].shift(LEFT * 0.15 * scale)
+            legs[1].shift(RIGHT * 0.15 * scale)
+            return VGroup(body, legs)
+
+        def make_rabbit(scale=1.0):
+            body = Circle(radius=0.4 * scale, color=C_GREEN, stroke_width=6)
+            legs = VGroup(
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_GREEN,
+                    stroke_width=6,
+                ),
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_GREEN,
+                    stroke_width=6,
+                ),
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_GREEN,
+                    stroke_width=6,
+                ),
+                Line(
+                    body.get_bottom() + DOWN * 0.05,
+                    body.get_bottom() + DOWN * (0.15 * scale),
+                    color=C_GREEN,
+                    stroke_width=6,
+                ),
+            )
+            x_positions = [-0.25, -0.1, 0.1, 0.25]
+            for i, leg in enumerate(legs):
+                leg.shift(RIGHT * x_positions[i] * scale)
+            return VGroup(body, legs)
+
         animals = VGroup()
-        for _ in range(20):
-            head = Circle(radius=0.4, color=YELLOW, fill_opacity=0.35, stroke_width=8)
-            foot_l = Line(
-                head.get_bottom() + LEFT * 0.12,
-                head.get_bottom() + DOWN * 0.15 + LEFT * 0.12,
-                color=YELLOW, stroke_width=8,
-            )
-            foot_r = Line(
-                head.get_bottom() + RIGHT * 0.12,
-                head.get_bottom() + DOWN * 0.15 + RIGHT * 0.12,
-                color=YELLOW, stroke_width=8,
-            )
-            animals.add(VGroup(head, foot_l, foot_r))
-
-        # 紧凑排布（短腿 + 小 buff），让网格宽高比 > 1，利于撑满横向
+        for i in range(20):
+            animals.add(make_chicken())
         animals.arrange_in_grid(rows=4, cols=5, buff=0.3)
 
-        # 撑满横向安全宽度
-        animals.scale_to_fit_width(safe_w)
+        # 标题底部 → 网格顶部
+        title_bottom = title_group.get_bottom()[1]
+        grid_top_y = title_bottom - 0.8
 
-        # 高度保护：网格底部不得侵入公式区
-        grid_top_y = title_group.get_bottom()[1] - 1.0
-        formulas_start_y = -3.0
-        max_grid_height = grid_top_y - (formulas_start_y - 0.5)
-        if animals.height > max_grid_height:
-            animals.scale_to_fit_height(max_grid_height)
+        # 网格撑满安全宽度
+        if animals.width > safe_w:
+            animals.scale_to_fit_width(safe_w)
 
-        # 垂直放置：顶部对齐 grid_top_y
-        animals.shift(UP * (grid_top_y - animals.get_top()[1]))
+        animals.move_to(
+            np.array([0, grid_top_y - animals.height / 2, 0])
+        )
 
-        with self.voiceover(text="首先，我们画 20 个圆圈代表这 20 只动物。假设它们全都是鸡！"):
-            self.play(*[Create(a[0]) for a in animals],
-                      run_time=AppConfig.FAST_SHAPE_RUNTIME)
-
-        with self.voiceover(text="既然全是鸡，每只鸡有 2 只脚，那么此时一共有 20 乘 2 等于 40 只脚。"):
+        with self.voiceover("我们先假设笼子里全是鸡，每只鸡有 2 只脚。"):
             self.play(
-                *[Create(a[1]) for a in animals],
-                *[Create(a[2]) for a in animals],
-                run_time=AppConfig.FAST_SHAPE_RUNTIME,
+                LaggedStart(
+                    *[FadeIn(a, shift=DOWN * 0.3) for a in animals],
+                    lag_ratio=0.05,
+                    run_time=1.8,
+                )
             )
+        self.wait(0.3)
 
-        # ============================================================
-        # 3. 底部深渊：大字号公式瀑布流（font_size=60）
-        # ============================================================
-        fs = 60
+        # ════════════════════════════════════════
+        # 3. 公式推导区（底部，严格不低于 SAFE_Y_BOTTOM）
+        # ════════════════════════════════════════
+        grid_bottom = animals.get_bottom()[1]
 
-        def make_eq(math_tex, unit, color):
-            g = VGroup(
-                MathTex(math_tex, font_size=fs, color=color),
-                Text(unit, font=AppConfig.DEFAULT_FONT, font_size=fs - 12, color=color),
-            ).arrange(RIGHT, buff=0.2)
-            if g.width > safe_w:
-                g.scale_to_fit_width(safe_w)
-            return g
+        eq1 = MathTex(r"20 \times 2 = 40", color=C_TEXT)
+        eq1_desc = Text(
+            "（只脚）", font=AppConfig.DEFAULT_FONT, font_size=36, color=C_TEXT
+        )
+        line1 = VGroup(eq1, eq1_desc).arrange(RIGHT, buff=0.15)
 
-        eq1 = make_eq(r"20 \times 2 = 40", "（只）", GRAY)
-        eq1.move_to(DOWN * abs(formulas_start_y))
+        eq2 = MathTex(r"56 - 40 = 16", color=C_TEXT)
+        eq2_desc = Text(
+            "（只脚）", font=AppConfig.DEFAULT_FONT, font_size=36, color=C_TEXT
+        )
+        line2 = VGroup(eq2, eq2_desc).arrange(RIGHT, buff=0.15)
 
-        with self.voiceover(text="20 乘 2 等于 40 只脚。"):
-            self.play(Write(eq1), run_time=AppConfig.FAST_TEXT_RUNTIME)
+        eq3 = MathTex(r"4 - 2 = 2", color=C_TEXT)
+        eq3_desc = Text(
+            "（只脚）", font=AppConfig.DEFAULT_FONT, font_size=36, color=C_TEXT
+        )
+        line3 = VGroup(eq3, eq3_desc).arrange(RIGHT, buff=0.15)
 
-        eq2 = make_eq(r"56 - 40 = 16", "（只）", RED)
-        eq2.next_to(eq1, DOWN, buff=0.7)
+        eq4 = MathTex(r"16 \div 2 = 8", color=C_HL)
+        eq4_desc = Text(
+            "（只兔）", font=AppConfig.DEFAULT_FONT, font_size=36, color=C_HL
+        )
+        line4 = VGroup(eq4, eq4_desc).arrange(RIGHT, buff=0.15)
 
-        with self.voiceover(text="但是题目说有 56 只脚，还差了 16 只脚，这 16 只脚去哪了呢？"):
-            self.play(Write(eq2), run_time=AppConfig.FAST_TEXT_RUNTIME)
+        ans_rabbit = Text(
+            "兔 = 8 只",
+            font=AppConfig.DEFAULT_FONT,
+            font_size=AppConfig.NORMAL_FONT_SIZE,
+            color=C_GREEN,
+            weight="BOLD",
+        )
+        ans_chicken = Text(
+            "鸡 = 20 - 8 = 12 只",
+            font=AppConfig.DEFAULT_FONT,
+            font_size=AppConfig.NORMAL_FONT_SIZE,
+            color=C_BLUE,
+            weight="BOLD",
+        )
+        final_group = VGroup(ans_rabbit, ans_chicken).arrange(DOWN, buff=0.3)
 
-        # ============================================================
-        # 4. 核心高潮：鸡变兔
-        # ============================================================
-        eq3 = make_eq(r"4 - 2 = 2", "（只/兔）", CYAN)
-        eq3.next_to(eq2, DOWN, buff=0.7)
+        formulas = VGroup(line1, line2, line3, line4, final_group).arrange(
+            DOWN, buff=0.3, aligned_edge=LEFT
+        )
 
-        with self.voiceover(text="因为我们把兔子也当成了鸡！每只兔子比鸡多出 2 只脚。"):
-            self.play(Write(eq3), run_time=AppConfig.FAST_TEXT_RUNTIME)
+        # 横向安全：不超过 SAFE_WIDTH
+        if formulas.width > safe_w:
+            formulas.scale_to_fit_width(safe_w)
 
-        # 给前 8 只补 2 条腿并变色
-        rabbit_legs = VGroup()
-        for i in range(8):
-            head = animals[i][0]
-            bottom = head.get_bottom()
-            r = head.radius
-            el = Line(bottom + LEFT * (r * 0.5), bottom + DOWN * (r * 0.4) + LEFT * (r * 0.5),
-                      color=CYAN, stroke_width=8)
-            er = Line(bottom + RIGHT * (r * 0.5), bottom + DOWN * (r * 0.4) + RIGHT * (r * 0.5),
-                      color=CYAN, stroke_width=8)
-            rabbit_legs.add(VGroup(el, er))
+        # 纵向安全：底部不得低于 SAFE_Y_BOTTOM
+        avail_h = grid_bottom - safe_bottom - 0.6
+        if formulas.height > avail_h:
+            formulas.scale_to_fit_height(avail_h)
 
-        eq4 = make_eq(r"16 \div 2 = 8", "（只兔）", CYAN)
-        eq4.next_to(eq3, DOWN, buff=0.7)
+        formulas.next_to(animals, DOWN, buff=0.5)
+        # 最终兜底：若底部仍低于安全线，整体上移
+        if formulas.get_bottom()[1] < safe_bottom:
+            formulas.shift(UP * (safe_bottom - formulas.get_bottom()[1]))
 
-        with self.voiceover(text="所以，我们需要把差的 16 只脚，两只两只地补给这些鸡，让它们变回兔子！"):
+        # ════════════════════════════════════════
+        # 4. 动画演绎（鸡→兔变色 + 添脚）
+        # ════════════════════════════════════════
+        with self.voiceover("全是鸡的话，20 只鸡一共 40 只脚。"):
+            self.play(Write(line1), run_time=1.0)
+        self.wait(0.2)
+
+        with self.voiceover("但实际有 56 只脚，少了 16 只脚。"):
+            self.play(Write(line2), run_time=1.0)
+        self.wait(0.2)
+
+        with self.voiceover("每只兔比鸡多 2 只脚。"):
+            self.play(Write(line3), run_time=1.0)
+        self.wait(0.2)
+
+        # 将前 8 只鸡"变成"兔（变色 + 添 2 只脚）
+        with self.voiceover("所以少的 16 只脚，就是 8 只兔子。"):
+            transforms = []
+            for i in range(8):
+                old = animals[i]
+                new_rabbit = make_rabbit()
+                new_rabbit.move_to(old.get_center())
+                new_rabbit.set(width=old.width)
+                transforms.append(
+                    ReplacementTransform(old, new_rabbit)
+                )
+                animals[i] = new_rabbit
             self.play(
-                *[animals[i].animate.set_color(CYAN) for i in range(8)],
-                *[Create(rabbit_legs[i]) for i in range(8)],
-                Write(eq4),
-                run_time=AppConfig.FAST_SHAPE_RUNTIME,
+                *transforms,
+                Write(line4),
+                run_time=2.0,
             )
+        self.wait(0.3)
 
-        # ============================================================
-        # 5. 总结收尾
-        # ============================================================
-        final_rabbit = VGroup(
-            Text("兔：", font=AppConfig.DEFAULT_FONT, font_size=fs, color=CYAN),
-            MathTex("8", font_size=fs, color=CYAN),
-            Text("只", font=AppConfig.DEFAULT_FONT, font_size=fs, color=CYAN),
-        ).arrange(RIGHT, buff=0.2)
-        final_chicken = VGroup(
-            Text("鸡：", font=AppConfig.DEFAULT_FONT, font_size=fs, color=YELLOW),
-            MathTex("20 - 8 = 12", font_size=fs, color=YELLOW),
-            Text("只", font=AppConfig.DEFAULT_FONT, font_size=fs, color=YELLOW),
-        ).arrange(RIGHT, buff=0.2)
-        final_group = VGroup(final_rabbit, final_chicken).arrange(DOWN, buff=0.5)
-        final_group.next_to(eq4, DOWN, buff=0.7)
-        if final_group.width > safe_w:
-            final_group.scale_to_fit_width(safe_w)
-
-        with self.voiceover(text="补完发现，一共有 8 只兔子！那鸡的数量就是 20 减 8 等于 12 只。假设法，你学会了吗？"):
-            self.play(Write(final_group), run_time=AppConfig.FAST_SHAPE_RUNTIME)
-            self.wait(2)
+        with self.voiceover("答案是兔子 8 只，鸡 12 只。"):
+            self.play(Write(final_group), run_time=1.2)
+        self.wait(2.0)
