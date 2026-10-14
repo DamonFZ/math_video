@@ -25,26 +25,20 @@ class DifferenceOfSquares(MathExplainScene):
         C_GREEN = AppConfig.COLOR_LINE_2
 
         # ════════════════════════════════════════
-        # 1. 顶部：灵魂拷问区 (Y > 4)
+        # 1. 顶部：核心标题区 (Y > 4)
         # ════════════════════════════════════════
-        line1 = Text(
-            "你是不是早就忘了...",
-            font=AppConfig.DEFAULT_FONT,
-            font_size=AppConfig.TITLE_FONT_SIZE,
-            color=C_TITLE,
-        )
-        line2 = Text(
+        title_group = Text(
             "平方差公式巧算",
             font=AppConfig.DEFAULT_FONT,
-            font_size=AppConfig.NORMAL_FONT_SIZE,
+            font_size=AppConfig.TITLE_FONT_SIZE,
             color=C_HL,
             weight="BOLD",
         )
-        title_group = VGroup(line1, line2).arrange(DOWN, buff=0.35)
         if title_group.width > safe_w:
             title_group.scale_to_fit_width(safe_w)
         title_group.to_edge(UP, buff=1.2)
 
+        # 声画分离：配音保留开场口语，画面只出现标题
         with self.voiceover("你是不是早就忘了初中学的平方差公式？"):
             self.play(Write(title_group), run_time=1.5)
         self.wait(0.3)
