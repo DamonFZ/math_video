@@ -17,9 +17,9 @@ class AppConfig:
     FAST_TEXT_RUNTIME = 0.5
     FAST_SHAPE_RUNTIME = 0.8
     DEFAULT_FONT = "sans-serif"
-    # 抖音大字号配置
-    TITLE_FONT_SIZE = 64     # 标题必须极大
-    NORMAL_FONT_SIZE = 52    # 普通正文和公式也要大
+    # 抖音竖屏大字报配置 (必须足够大)
+    TITLE_FONT_SIZE = 56
+    NORMAL_FONT_SIZE = 48
 
     # === 白底草稿本配色 ===
     COLOR_TITLE = "#222222"       # 极深灰，代替纯黑更柔和
@@ -29,9 +29,8 @@ class AppConfig:
     COLOR_HIGHLIGHT = "#E65100"   # 亮橙红（用于重点/高亮）
 
     # === 抖音短视频 UI 安全区 (极其重要) ===
-    # Manim 竖屏 frame_width 约为 8.0，frame_height 约为 14.2
-    # 右侧有头像/点赞 (需留白至少 1.2)，左侧留白 0.8
-    SAFE_WIDTH = 5.8              # 核心内容最大物理宽度，强制防遮挡
+    # PM 指定的红色安全框宽度 (横向强行撑满目标)
+    SAFE_WIDTH = 6.5              # 留出左右各 0.75 的 UI 防遮挡边距
 
     # 底部有文案和音乐条，绝对不能低于此 Y 坐标
     SAFE_Y_BOTTOM = -5.0
