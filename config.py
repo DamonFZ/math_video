@@ -60,3 +60,9 @@ class AppConfig:
 
     # 右侧公式区最大允许宽度 (防止溢出屏幕右侧)
     MAX_RIGHT_WIDTH = 6.0
+
+    # === 图形视觉饱满度标准 (Visual Weight) ===
+    # 竖屏大字报风格下，图形必须极度粗壮醒目
+    LINE_STROKE_WIDTH = 25       # 线段类（如年龄线、绳子）必须像"色块条"一样粗壮
+    SHAPE_STROKE_WIDTH = 10      # 轮廓类（如圆圈、方框）边界必须加粗
+    SHAPE_FILL_OPACITY = 0.5     # 闭合图形建议自带半透明填充，增加体积感

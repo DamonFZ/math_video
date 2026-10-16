@@ -53,3 +53,9 @@
   - `"小时候怎么没想到，[结合题目的后续文案]"`
   - `"你是不是忘记了，[结合题目的后续文案]"`
 - **视觉约束**：该 Hook 仅限语音播放，**绝对不可作为 `Text` 渲染在画面上**（保持声画分离，画面直接出现标题）。
+
+## 8. 铁律：图形视觉饱满度 (Visual Weight & Fullness)
+竖屏环境下的图形必须能抗衡巨大的文字，严禁使用 Manim 默认的细线！
+- **线段必须是"条"**：在绘制任何用于表示数量的独立线段（如年龄线段、绳子、路程）时，必须强制设置 `stroke_width=AppConfig.LINE_STROKE_WIDTH`（即 25）。
+- **图形必须加粗/填充**：在绘制圆圈、多边形等闭合几何体时，必须设置 `stroke_width=AppConfig.SHAPE_STROKE_WIDTH`（即 10），并尽可能附带 `fill_opacity=AppConfig.SHAPE_FILL_OPACITY` 使其具有体积感。
+- **中部强行撑满**：所有生成的中部图形 `VGroup`，除了极特殊的微小点缀外，在 `play` 之前必须强制调用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH * 0.85)`（或更大比例），让图形在横向上霸占屏幕！
