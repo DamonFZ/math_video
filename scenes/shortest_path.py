@@ -10,6 +10,10 @@
 - 缩放后的附属元素（虚线、大斜边、标注）一律从实际点位 (.get_end/.get_center) 取值。
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from manim import *
 from base_scene import MathExplainScene
 from config import AppConfig

@@ -5,6 +5,10 @@
 用大括号标注"相差依然是 30 岁"，直观证明年龄差不变。
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from manim import *
 from base_scene import MathExplainScene
 from config import AppConfig

@@ -8,6 +8,10 @@
   - 全程 SAFE_WIDTH=6.5 横向保护，SAFE_Y_BOTTOM=-5.0 底部保护
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from manim import *
 from base_scene import MathExplainScene
 from config import AppConfig
