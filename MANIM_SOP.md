@@ -61,7 +61,9 @@
 竖屏环境下的图形必须能抗衡巨大的文字，严禁使用 Manim 默认的细线！
 - **线段必须是"条"**：在绘制任何用于表示数量的独立线段（如年龄线段、绳子、路程）时，必须强制设置 `stroke_width=AppConfig.LINE_STROKE_WIDTH`（即 25）。
 - **图形必须加粗/填充**：在绘制圆圈、多边形等闭合几何体时，必须设置 `stroke_width=AppConfig.SHAPE_STROKE_WIDTH`（即 10），并尽可能附带 `fill_opacity=AppConfig.SHAPE_FILL_OPACITY` 使其具有体积感。
-- **中部强行撑满**：所有生成的中部图形 `VGroup`，除了极特殊的微小点缀外，在 `play` 之前必须强制调用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH * 0.85)`（或更大比例），让图形在横向上霸占屏幕！
+- **双向限幅法则（极度重要）**：所有图形 `VGroup` 组装完毕后，在放大时必须根据其"宽高比"选择不同的缩放方法：
+  - **横向图形（宽 > 高）**：使用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH * 0.85)` 撑满宽度。
+  - **纵向图形（高 >= 宽）**：**绝对禁止使用宽缩放！** 必须强制使用 `.scale_to_fit_height(AppConfig.SAFE_HEIGHT_GRAPHIC)`，确保图形高度不会捅破上方的标题或挤走下方的公式。
 
 ## 9. 铁律：动态空间管理 (阅后即焚 / FadeOut 法则)
 - **严禁全屏堆砌**：当一道题目包含多个独立的几何状态（如情况A、情况B）或冗长的推导步骤时，绝对不允许把所有内容同时挤在画面上！
