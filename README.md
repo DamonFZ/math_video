@@ -13,7 +13,7 @@ math/
 ├── base_scene.py        # 场景基类 MathExplainScene + 火山引擎 TTS 服务
 ├── config.py            # 全局配置：TTS 密钥、音色、动画参数、排版锚点
 ├── path_config.py       # 全局路径配置：项目根目录、虚拟环境、媒体输出
-├── scenes/              # 各题目的场景脚本（已纳入版本控制，每道题一个文件）
+├── scenes/              # 各题目的场景脚本（已 gitignore，不参与多机同步）
 │   ├── count_squares.py
 │   ├── geometry_math.py
 │   ├── odd_numbers.py

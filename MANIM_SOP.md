@@ -28,7 +28,7 @@
 - **相对坐标的重置要求**：请注意，如果在应用 `.scale_to_fit_width()` 之后改变了元素的尺寸，必须重新调用 `.next_to()` 或 `.move_to()` 刷新其锚点，以防缩放导致中心点偏移！
 
 ## 5. 铁律：自动化版本控制 (Git Workflow)
-- **目录约定**：每一道题的场景类文件，统一存放在项目根目录下的 `scenes/` 文件夹中（如 `scenes/age_difference.py`）。场景文件顶部必须加入 `sys.path` 引导，以确保能从子目录正确导入根目录的 `base_scene` 与 `config`：
+- **目录约定**：每一道题的场景类文件，统一存放在项目根目录下的 `scenes/` 文件夹中（如 `scenes/age_difference.py`）。`scenes/` 目录已被 `.gitignore` 忽略（多机同步时避免场景文件与视频互相干扰），**仅核心项目文件（`config.py`、`base_scene.py`、`MANIM_SOP.md`、`README.md` 等）参与版本控制**。场景文件顶部必须加入 `sys.path` 引导，以确保能从子目录正确导入根目录的 `base_scene` 与 `config`：
   ```python
   import sys
   from pathlib import Path
@@ -36,7 +36,7 @@
   from base_scene import MathExplainScene
   from config import AppConfig
   ```
-- **触发时机**：每次你修改了非 `.gitignore` 排除的文件（例如新建了业务 `.py` 文件、重构了基类、或者修复了某个排版 Bug），**并且在终端成功执行渲染、确认视频出片无误后**，必须主动进行 Git 提交。
+- **触发时机**：每次你修改了核心项目文件（如 `config.py`、`base_scene.py`、`MANIM_SOP.md` 等，不含被 `.gitignore` 忽略的 `scenes/` 与 `media/`），**并且在终端成功执行渲染、确认视频出片无误后**，必须主动进行 Git 提交。
 - **标准执行动作**：
   1. 执行 `git status` 检查变动。
   2. 执行 `git add .` 添加所有合法文件的修改。
