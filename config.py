@@ -18,7 +18,7 @@ class AppConfig:
     FAST_SHAPE_RUNTIME = 0.8
     DEFAULT_FONT = "sans-serif"
     # 抖音竖屏大字报配置 (必须足够大)
-    TITLE_FONT_SIZE = 56
+    TITLE_FONT_SIZE = 68
     NORMAL_FONT_SIZE = 48
 
     # === 白底草稿本配色 ===
