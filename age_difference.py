@@ -22,7 +22,7 @@ class AgeDifference(MathExplainScene):
         C_GREEN = AppConfig.COLOR_LINE_2
 
         # ════════════════════════════════════════
-        # 1. 顶部：题目展示 (Y > 4，声画分离)
+        # 1. 顶部：题目展示 (声画分离，起点压低 buff=2.5)
         # ════════════════════════════════════════
         t1 = Text(
             "年龄问题 (易错题)",
@@ -39,10 +39,11 @@ class AgeDifference(MathExplainScene):
         )
         title_group = VGroup(t1, t2).arrange(DOWN, buff=0.35)
         title_group.scale_to_fit_width(safe_w)
-        title_group.to_edge(UP, buff=1.2)
+        title_group.to_edge(UP, buff=2.5)
         title_group.set_x(safe_cx)
 
-        with self.voiceover("很多人第一反应是赶紧加10，其实你上当了！记住一个核心秘诀，一秒出答案！"):
+        # IP 专属 Hook：仅配音，不渲染文字（SOP 铁律 7）
+        with self.voiceover("小时候怎么没想到，这种年龄差问题其实有秒杀的绝招！"):
             self.play(Write(title_group), run_time=1.5)
         self.wait(0.3)
 
@@ -64,7 +65,8 @@ class AgeDifference(MathExplainScene):
 
         xiao_group = VGroup(xiao_bar, xiao_label)
         mom_group = VGroup(mom_bar, mom_label)
-        bars = VGroup(xiao_group, mom_group).arrange(DOWN, buff=1.0)
+        # 两根线段的垂直间距拉开（舒展瀑布流）
+        bars = VGroup(xiao_group, mom_group).arrange(DOWN, buff=1.3)
 
         # 延伸段（预构建，初始隐藏）
         xiao_add = Line(xiao_bar.get_end(), xiao_bar.get_end() + add_len * RIGHT,
@@ -95,7 +97,7 @@ class AgeDifference(MathExplainScene):
         )
         full_graphic.scale_to_fit_width(safe_w * 0.9)
         full_graphic.set_x(safe_cx)
-        full_graphic.next_to(title_group, DOWN, buff=0.8)
+        full_graphic.next_to(title_group, DOWN, buff=1.5)
 
         # 先隐藏后出现的元素
         for mob in [xiao_add, mom_add, xiao_add_label, mom_add_label,
@@ -133,15 +135,10 @@ class AgeDifference(MathExplainScene):
 
         eq1 = make_eq("今年：", r"36 - 6 = 30", "(岁)")
         eq2 = make_eq("10年后：", r"46 - 16 = 30", "(岁)")
-        equations = VGroup(eq1, eq2).arrange(DOWN, buff=0.5)
+        # 行间距按新 SOP 加大到 1.0
+        equations = VGroup(eq1, eq2).arrange(DOWN, buff=1.0)
         if equations.width > safe_w:
             equations.scale_to_fit_width(safe_w)
-        equations.set_x(safe_cx)
-        equations.next_to(full_graphic, DOWN, buff=0.8)
-
-        with self.voiceover("算式验证一下，也是30岁。所以，无论过多少年，年龄差永远不变！"):
-            self.play(Write(equations), run_time=1.2)
-        self.wait(0.3)
 
         conclusion = Text(
             "结论：年龄差永远不变！",
@@ -157,12 +154,23 @@ class AgeDifference(MathExplainScene):
         result_group = VGroup(conclusion, final_answer).arrange(DOWN, buff=0.3)
         if result_group.width > safe_w:
             result_group.scale_to_fit_width(safe_w)
-        result_group.set_x(safe_cx)
-        result_group.next_to(equations, DOWN, buff=0.5)
 
-        # 底部安全区兜底
-        if result_group.get_bottom()[1] < safe_bottom:
-            result_group.shift(UP * (safe_bottom - result_group.get_bottom()[1]))
+        # 底部整体瀑布流栈：算式区 + 结论区打包，统一做纵向预算
+        # 可用高度 = 图形底 - 1.5 间距 - 底部警戒线
+        bottom_stack = VGroup(equations, result_group).arrange(DOWN, buff=0.8)
+        avail_h = full_graphic.get_bottom()[1] - 1.5 - safe_bottom
+        if bottom_stack.height > avail_h:
+            bottom_stack.scale_to_fit_height(avail_h)
+        bottom_stack.next_to(full_graphic, DOWN, buff=1.5)
+        bottom_stack.set_x(safe_cx)
+
+        # 底部安全区兜底：整栈上移，确保不低于警戒线
+        if bottom_stack.get_bottom()[1] < safe_bottom:
+            bottom_stack.shift(UP * (safe_bottom - bottom_stack.get_bottom()[1]))
+
+        with self.voiceover("算式验证一下，也是30岁。所以，无论过多少年，年龄差永远不变！"):
+            self.play(Write(equations), run_time=1.2)
+        self.wait(0.3)
 
         with self.voiceover("记住这个秘诀，年龄问题一秒出答案！关注我，每天学点数学思维。"):
             self.play(Write(conclusion), run_time=0.8)

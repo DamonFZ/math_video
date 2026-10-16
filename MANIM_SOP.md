@@ -5,11 +5,10 @@
 - 只要包含中文，必须使用 `Text("中文", font=AppConfig.DEFAULT_FONT)`。
 - 纯数学公式 (无中文) 才能使用 `MathTex`。
 
-## 2. 铁律：三分法防重叠排版 (Anti-Overlap Layout)
-- **顶部题干 (Question)**：统一定位在左上角 `.to_corner(UL)`，使用 `VGroup(...).arrange(DOWN, aligned_edge=LEFT)`。
-- **左侧画图区 (Diagram)**：图形整体的主体中心必须放置在 `AppConfig.ZONE_GRAPH_CENTER`。严禁使用纯 `ORIGIN` 或随意 `shift` 导致撞上文字。
-- **右侧推导区 (Equations)**：公式和总结文字统一放在右侧，起始位置对齐 `AppConfig.ZONE_MATH_START`。后续推导公式请使用 `.next_to(prev_eq, DOWN, aligned_edge=LEFT)` 垂直向下排列。
-- **高度红线**：图形和右侧公式的最高点，绝对不能超过 Y 坐标 `AppConfig.SAFE_Y_TOP`。
+## 2. 铁律：竖屏 Y 轴瀑布流排版 (Vertical Waterfall Layout)
+- **压低起点**：顶部标题统一定位为 `.to_edge(UP, buff=2.5)`，强制下移整个排版的起点，避免画面重心贴顶。
+- **舒展间距**：利用 `next_to(..., DOWN)` 排布中部图形和底部公式时，必须加大垂直间距（`buff=1.5` 或更大），让内容像瀑布一样舒展地流向屏幕中下部，严禁元素挤在一起。
+- **相对坐标绑定**：中部图形与底部推导必须通过 `.next_to(上一区域, DOWN, buff=1.5)` 链式锚定，确保整体重心分布在屏幕中下部。
 
 ## 3. 铁律：相对坐标绑定
 - 辅助线、高亮扫描框、移动动效等，坐标必须通过核心图形的 `.get_center()`、`.get_corner()` 或 `VGroup` 绑定。绝不能硬编码写死坐标，确保主图缩放移动时，附属物不发生错位。
@@ -40,3 +39,9 @@
 - **偏左视觉中轴**：为了躲避右侧的点赞/评论按钮，**严禁将画面内容绝对居中！** 所有的头部标题、中部图形、底部公式，如果需要居中放置，必须且只能相对于 `x = AppConfig.SAFE_CENTER_X` 进行中心对齐。例如：`group.move_to(RIGHT * AppConfig.SAFE_CENTER_X)` 或者在排列后 `group.shift(LEFT * 0.5)`。
 - **右侧防遮挡**：在加入画面前，必须强制调用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH)`，进一步确保宽度安全。
 - **底部防遮挡**：排版在最底部的总结或公式，其 `.get_bottom()[1]` 绝对不能小于 `AppConfig.SAFE_Y_BOTTOM`（即 -3.5）。确保为抖音底部文案留出巨大留白。
+
+## 7. 铁律：专属配音 Hook (Voiceover Standard)
+- **标准句式**：所有视频的 voiceover 开场第一句话，必须且只能使用以下两种句式之一：
+  - `"小时候怎么没想到，[结合题目的后续文案]"`
+  - `"你是不是忘记了，[结合题目的后续文案]"`
+- **视觉约束**：该 Hook 仅限语音播放，**绝对不可作为 `Text` 渲染在画面上**（保持声画分离，画面直接出现标题）。
