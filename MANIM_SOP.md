@@ -36,6 +36,7 @@
   3. 执行 `git commit -m "<type>: <简明扼要描述本次修改或新增的题目>"` （type 请使用规范的 feat, fix, chore, docs 等）。
 - **底线原则**：严禁在代码运行报错、画面崩溃时进行 commit。确保历史记录中的每一次 commit 都是一个能跑通出片的“可用版本”。
 
-## 6. 铁律：抖音 UI 安全区 (Safe Zone)
-- **右侧防遮挡**：抖音右侧有点赞栏。所有居中打组的 `VGroup`，在 `play` 之前必须调用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH)`，确保横向绝对安全。若元素天然较小，则无需放大，但绝不能超过该宽度。
-- **底部防遮挡**：抖音底部有文案。所有排版在最底部的公式或总结文字，其 `.get_bottom()[1]` 绝对不能小于 `AppConfig.SAFE_Y_BOTTOM`（即 -5.0）。如果超出，必须将整个内容组整体上移 `.shift(UP * ...)`。
+## 6. 铁律：非对称 UI 安全区 (Asymmetric Safe Zone)
+- **偏左视觉中轴**：为了躲避右侧的点赞/评论按钮，**严禁将画面内容绝对居中！** 所有的头部标题、中部图形、底部公式，如果需要居中放置，必须且只能相对于 `x = AppConfig.SAFE_CENTER_X` 进行中心对齐。例如：`group.move_to(RIGHT * AppConfig.SAFE_CENTER_X)` 或者在排列后 `group.shift(LEFT * 0.5)`。
+- **右侧防遮挡**：在加入画面前，必须强制调用 `.scale_to_fit_width(AppConfig.SAFE_WIDTH)`，进一步确保宽度安全。
+- **底部防遮挡**：排版在最底部的总结或公式，其 `.get_bottom()[1]` 绝对不能小于 `AppConfig.SAFE_Y_BOTTOM`（即 -3.5）。确保为抖音底部文案留出巨大留白。
